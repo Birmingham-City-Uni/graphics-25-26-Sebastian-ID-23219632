@@ -54,7 +54,7 @@ int main()
 		}
 
 	//task 2!!!
-	setPixel(imageBuffer, 0, 0, 255, 0, 255, 255);
+	setPixel(imageBuffer, 0, 0, 0, 255, 0, 255);
 	
 
 	/// *** Lab Tasks ***
