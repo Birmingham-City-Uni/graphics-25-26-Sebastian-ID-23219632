@@ -15,28 +15,31 @@ public:
 	// Change this to set the x, y and z components of the vector to all be zero.
 	// You can use an initialiser list, or set them in the constructor function's body.
 	Vector3()
+		: x_(0.0f), y_(0.0f), z_(0.0f)
 	{
-		// YOUR CODE HERE
 	}
 
 	// This constructor can be used to set the x, y and z components of a vector when it
 	// is created. Change this function to set the x_, y_ and z_ members to the values
 	// provided.
 	Vector3(float x, float y, float z)
+		: x_(x), y_(y), z_(z)
 	{
-		// YOUR CODE HERE
 	}
 
 	// Implement this method to add two vectors.
+	//other represents the right side. essentially, it's x_+x_2, y_+y_2, z_+z_2. it's adding two vectors to make a new one.
 	Vector3 operator+(const Vector3& other) const
 	{
-		// YOUR CODE HERE
+		return Vector3(x_ + other.x_, y_ + other.y_, z_ + other.z_);
 	}
 
-	// Multiply the vector by a scalar.
+	// Multiply the vector by a scalar. 
+	// since scalars are x*scalar, y*scalar, z*scalar = (xs,ys,zs) where s stands for scalar
+	// it doesn't follow the other.x scheme.
 	Vector3 operator*(float scalar) const
 	{
-		// YOUR CODE HERE
+		return Vector3(x_ * scalar, y_ * scalar, z_ * scalar);
 	}
 
 	// Get a component of the vector
@@ -48,7 +51,12 @@ public:
 	// error.
 	float& operator[](int i)
 	{
-		// YOUR CODE HERE
+		switch (i)
+		{
+		case 0: return x_;
+		case 1: return y_;
+		case 2: return z_;
+		}
 	}
 
 	// This is the const version of the [] operator.
@@ -56,7 +64,12 @@ public:
 	// The code inside can be the same as for the non-const version above.
 	float operator[](int i) const
 	{
-		// YOUR CODE HERE
+		switch (i) 
+		{
+		case 0: return x_;
+		case 1: return y_;
+		case 2: return z_;
+		}
 	}
 
 	// I have already written these getters for you.
