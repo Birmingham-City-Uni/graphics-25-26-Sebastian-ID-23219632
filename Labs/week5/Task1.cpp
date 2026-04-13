@@ -80,8 +80,9 @@ void drawTriangle(std::vector<uint8_t>& image, int width, int height,
 			// Work out the world-space position and normal at this point on the triangle.
 			// You can work this out using t.verts, t.norms and the barycentric coordinates.
 			// HINT: Don't forget to re-normalise your norm afterwards!
-			Eigen::Vector3f worldP = Eigen::Vector3f::Zero();
-			Eigen::Vector3f normP = Eigen::Vector3f::Zero();
+			Eigen::Vector3f worldP = t.verts[0] * b0 + t.verts[1] * b1 + t.verts[2] * b2;
+			Eigen::Vector3f normP = t.norms[0] * b0 + t.norms[1] * b1 + t.norms[2] * b2;
+			normP.normalize();
 			// *** END YOUR CODE ***
 
 			// Work out colour at this position.
@@ -95,7 +96,7 @@ void drawTriangle(std::vector<uint8_t>& image, int width, int height,
 				// Comments and starter code are provided below to walk you through the steps involved.
 
 				// Work out the intensity of this light source, at the point worldP.
-				Eigen::Vector3f lightIntensity = Eigen::Vector3f::Zero();
+				Eigen::Vector3f lightIntensity = light->getIntensityAt(worldP);
 
 				// We only need to do the following if the light isn't an ambient light.
 				if (light->getType() != Light::Type::AMBIENT) {
@@ -105,16 +106,19 @@ void drawTriangle(std::vector<uint8_t>& image, int width, int height,
 					// the light source to the surface.
 					// You want the vector from the surface outward, so *negate* this vector
 					// (i.e. use -direction, rather than direction).
-					float dotProd = 0.0f;
+					float dotProd = normP.dot(-light->getDirection(worldP));
 
 					// We don't want negative light - if your dot product was less than 0, set it to 0.
+					dotProd = std::max(dotProd, 0.0f);
 
 					// Multiply the light intensity by the dot product.
+					lightIntensity *= dotProd;
 				}
 
 				// Now add the intensity times the albedo.
 				// You need to use a coefficient-wise multiply (not matrix multiply, dot product or cross product!)
 				// There's a handy coeffWiseMultiply function I've written for you in LinAlg.hpp for this.
+				color += coeffWiseMultiply(lightIntensity, albedo);
 
 				// *** END YOUR CODE ***
 			}

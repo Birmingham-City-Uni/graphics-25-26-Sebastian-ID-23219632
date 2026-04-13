@@ -2,6 +2,8 @@
 #include <lodepng.h>
 #include <fstream>
 #include <sstream>
+#include <cstdint>
+#include <cstring>
 #include "Vector3.hpp"
 
 // The goal for this lab is to draw a triangle mesh loaded from an OBJ file from scratch,
@@ -23,47 +25,28 @@ void setPixel(std::vector<uint8_t>& image, int x, int y, int width, int height, 
 void drawLine(std::vector<uint8_t>& image, int width, int height, int startX, int startY, int endX, int endY)
 {
 	// Task 1: Bresenham's line algorithm
-	// *** YOUR CODE HERE
-	//Step 1: work out the gradient
-	float gradient = float(endY - startY) / float(endX - startX);
-	// Step 2: check if it's steep (i.e. absolute value bigger than 1;)
-	bool steep = std::abs(gradient) > 1;
+	int dx = std::abs(endX - startX);
+	int dy = std::abs(endY - startY);
+	int sx = (startX < endX) ? 1 : -1;
+	int sy = (startY < endY) ? 1 : -1;
+	int err = dx - dy;
 
-	if (steep) {
-		// Step 3: The steep version of the code, iterating over Y
-		// First, make sure that startY is less than endY. 
-		// If they're in the wrong order, swap both X and Y.
-		if (startY > endY) {
-			std::swap(startX, endX);
-			std::swap(startY, endY);
+	while (true) {
+		if (startX >= 0 && startX < width && startY >= 0 && startY < height) {
+			setPixel(image, startX, startY, width, height, 255, 255, 255);
 		}
-			// Now, iterate from startY to endY. 
-			for (int y = startY; y <= endY; ++y) {
-				// Draw the line, following the formula!
-				int x = startX + int(float(y - startY) / gradient);
-				if (x >= 0 && x < width && y >= 0 && y < height) {
-					setPixel(image, x, y, width, height, 255, 255, 255);
-				}
-			}
+		if (startX == endX && startY == endY) break;
+		int e2 = 2 * err;
+		if (e2 > -dy) {
+			err -= dy;
+			startX += sx;
 		}
-		else {
-			// Step 4: The shallow version of the code, iterating over X
-			// First, make sure that startx is less than endX. 
-			// If they're in the wrong order, swap both X and Y.
-			if (startX > endX) {
-				std::swap(startX, endX);
-				std::swap(startY, endY);
-			}
-			// Now, iterate from startY to endY. 
-			for (int x = startX; x <= endX; ++x) {
-				// Draw the line, following the formula!
-				int y = startY + int(float(x - startX) * gradient);
-				if (x >= 0 && x < width && y >= 0 && y < height) {
-					setPixel(image, x, y, width, height, 255, 255, 255);
-				}
-			}
+		if (e2 < dx) {
+			err += dx;
+			startY += sy;
 		}
 	}
+}
 
 
 int main()
