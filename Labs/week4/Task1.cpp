@@ -3,6 +3,8 @@
 #include <math.h>
 
 #include <iostream>
+#include <algorithm>
+#include <cstring>
 #include <lodepng.h>
 #include "Mesh.hpp"
 
@@ -115,9 +117,9 @@ void drawMesh(std::vector<unsigned char>& image, const Mesh& mesh,
 		// The matrix is 4x4, and the v0, v1, v2 are 3D! You'll need to convert them to 4D 
 		// homogeneous vectors first (add a 1 in the w component).
 		// You can use the vec3ToVec4 function above to do this.
-		tv0 = Eigen::Vector4f::Zero();
-		tv1 = Eigen::Vector4f::Zero();
-		tv2 = Eigen::Vector4f::Zero();
+		tv0 = transform * vec3ToVec4(v0);
+		tv1 = transform * vec3ToVec4(v1);
+		tv2 = transform * vec3ToVec4(v2);
 
 		Eigen::Vector2f p0(tv0.x() * 250 + width / 2, -tv0.y() * 250 + height / 2);
 		Eigen::Vector2f p1(tv1.x() * 250 + width / 2, -tv1.y() * 250 + height / 2);
@@ -142,15 +144,21 @@ void drawMesh(std::vector<unsigned char>& image, const Mesh& mesh,
 // Implement this function that makes a translation matrix
 Eigen::Matrix4f translationMatrix(const Eigen::Vector3f& t)
 {
-	// *** Your code here ***
-	return Eigen::Matrix4f::Identity();
+	Eigen::Matrix4f output = Eigen::Matrix4f::Identity();
+	output(0, 3) = t.x();
+	output(1, 3) = t.y();
+	output(2, 3) = t.z();
+	return output;
 }
 
 // Implement this function that makes a uniform scaling matrix
 Eigen::Matrix4f scaleMatrix(float s)
 {
-	// *** Your code here ***
-	return Eigen::Matrix4f::Identity();
+	Eigen::Matrix4f output = Eigen::Matrix4f::Identity();
+	output(0, 0) = s;
+	output(1, 1) = s;
+	output(2, 2) = s;
+	return output;
 }
 
 // Implement this function that makes a rotation matrix around the y
@@ -158,8 +166,14 @@ Eigen::Matrix4f scaleMatrix(float s)
 // Hint check: https://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions
 Eigen::Matrix4f rotateYMatrix(float theta)
 {
-	// *** Your code here ***
-	return Eigen::Matrix4f::Identity();
+	Eigen::Matrix4f output = Eigen::Matrix4f::Identity();
+	float c = cosf(theta);
+	float s = sinf(theta);
+	output(0, 0) = c;
+	output(0, 2) = s;
+	output(2, 0) = -s;
+	output(2, 2) = c;
+	return output;
 }
 
 int main()
@@ -270,8 +284,15 @@ int main()
 	// TIP: Think about the order of your transforms. Do you want to rotate first,
 	//      scale first, or translate first? Does the order matter?
 
-	Eigen::Matrix4f bunnyTransform = Eigen::Matrix4f::Identity();
-	Eigen::Matrix4f dragonTransform = Eigen::Matrix4f::Identity();
+	Eigen::Matrix4f bunnyTransform =
+		translationMatrix(Eigen::Vector3f(-0.55f, -0.45f, 0.0f)) *
+		rotateYMatrix(-0.7f) *
+		scaleMatrix(1.0f);
+
+	Eigen::Matrix4f dragonTransform =
+		translationMatrix(Eigen::Vector3f(0.35f, 0.32f, 0.0f)) *
+		rotateYMatrix(0.7f) *
+		scaleMatrix(1.2f);
 
 	// =========== TASK 4 ==============
 	// Prepare your own mesh in blender, exporting as OBJ

@@ -1,38 +1,85 @@
 #include <iostream>
 #include <lodepng.h>
 
+int Yinput1 = 0;
+int Yinput2 = 0;
+int Xinput1 = 0;
+int Xinput2 = 0;
+
+int Rvalue = 0;
+int Gvalue = 0;
+int Bvalue = 0;
+int Avalue = 0;
+
+//void SetPixles() {
 
 
-void setPixel(std::vector<uint8_t>& buffer, int x, int y, int r, int g, int b, int a) {
+//	/*std::cout << "Please enter the starting range for Y \n";
+//	std::cin >> Yinput1;
+//	std::cout << "Y starting range is " << Yinput1 << "\n";
+//
+//	std::cout << "Please enter the end range for Y \n";
+//	std::cin >> Yinput2;
+//	std::cout << "Y end range is " << Yinput2 << "\n";
+//
+//	std::cout << "Please enter the starting range for X \n";
+//	std::cin >> Xinput1;
+//	std::cout << "X starting range is " << Xinput1 << "\n";
+//
+//	std::cout << "Please enter the end range for X \n";
+//	std::cin >> Xinput2;
+//	std::cout << "X end range is " << Xinput2 <<"\n";
+//
+//	std::cout << "Please enter a value for Red (0-255) \n";
+//	std::cin >> Rvalue;
+//	std::cout << "Red value is " << Rvalue << "\n";
+//
+//	std::cout << "Please enter a value for Green (0-255) \n";
+//	std::cin >> Gvalue;
+//	std::cout << "Green value is " << Gvalue << "\n";
+//
+//	std::cout << "Please enter a value for Blue (0-255) \n";
+//	std::cin >> Bvalue;
+//	std::cout << "Blue value is " << Bvalue << "\n";
+//
+//	std::cout << "Please enter a value for Opacity (0-255) \n";
+//	std::cin >> Avalue;
+//	std::cout << "Opacity value is " << Avalue << "\n";
+//}*/
 
+
+void SetPixel(std::vector<uint8_t>& buffer, int width, int height, int x, int y, int r, int g, int b, int a) {
 	const int nChannels = 4;
 
-	int pixelIdx = x + y;
+	if (x < 0 || x >= width || y < 0 || y >= height)
+		return;
+
+	int pixelIdx = x + y * width;
 	int base = pixelIdx * nChannels;
 
-	buffer[base + 0] = r;
-	buffer[base + 1] = g;
-	buffer[base + 2] = b;
-	buffer[base + 3] = a;
+	buffer[base + 0] = static_cast<uint8_t>(r);
+	buffer[base + 1] = static_cast<uint8_t>(g);
+	buffer[base + 2] = static_cast<uint8_t>(b);
+	buffer[base + 3] = static_cast<uint8_t>(a);
 }
 
 int main()
 {
 	std::string outputFilename = "output.png";
 
+	//SetPixles();
+
 	const int width = 1920, height = 1080;
 	const int nChannels = 4;
 
-	
-
-	//// Setting up an image buffer
-	//// This std::vector has one 8-bit value for each pixel in each row and column of the image, and
-	//// for each of the 4 channels (red, green, blue and alpha).
-	//// Remember 8-bit unsigned values can range from 0 to 255.
+	// Setting up an image buffer
+	// This std::vector has one 8-bit value for each pixel in each row and column of the image, and
+	// for each of the 4 channels (red, green, blue and alpha).
+	// Remember 8-bit unsigned values can range from 0 to 255.
 	std::vector<uint8_t> imageBuffer(height*width*nChannels);
 
 	// This for loop sets all the pixels of the image to a cyan colour. 
-	for(int y = 0; y < height / 2; ++y) 
+	for (int y = 0; y < height; ++y)
 		for (int x = 0; x < width; ++x) {
 			int pixelIdx = x + y * width;
 			imageBuffer[pixelIdx * nChannels + 0] = 0; // Set red pixel values to 0
@@ -40,33 +87,44 @@ int main()
 			imageBuffer[pixelIdx * nChannels + 2] = 255; // Set blue pixel values to 255 (full brightness)
 			imageBuffer[pixelIdx * nChannels + 3] = 255; // Set alpha (transparency) pixel values to 255 (fully opaque)
 		}
-	
-	
-	
-	//task 1 done!!!!
-	for (int y = height/2; y < height; ++y)
+
+	SetPixel(imageBuffer, width, height, 5, 5, 255, 0, 0, 255);
+
+
+	// Task 1: set the lower half of the image to green.
+	for (int y = height / 2; y < height; ++y)
+		for (int x = 0; x < width; ++x)
+			SetPixel(imageBuffer, width, height, x, y, 0, 255, 0, 255);
+
+	// Task 2: test the setPixel function with a few coloured pixels/regions.
+	for (int y = 50; y < 200; ++y)
+		for (int x = 50; x < 250; ++x)
+			SetPixel(imageBuffer, width, height, x, y, 255, 0, 0, 255);
+
+	for (int y = 100; y < 250; ++y)
+		for (int x = 250; x < 450; ++x)
+			SetPixel(imageBuffer, width, height, x, y, 0, 0, 255, 255);
+
+	// Optional Task 3: draw a circle in the centre of the image.
+	int centreX = width / 2;
+	int centreY = height / 2;
+	int radius = 150;
+	for (int y = 0; y < height; ++y)
 		for (int x = 0; x < width; ++x) {
-			int pixelIdx = x + y * width;
-			imageBuffer[pixelIdx * nChannels + 0] = 0; // Set red pixel values to 0
-			imageBuffer[pixelIdx * nChannels + 1] = 255; // Set green pixel values to 255 (full brightness)
-			imageBuffer[pixelIdx * nChannels + 2] = 0; // Set blue pixel values to 255 (full brightness)
-			imageBuffer[pixelIdx * nChannels + 3] = 255; // Set alpha (transparency) pixel values to 255 (fully opaque)
+			int dx = x - centreX;
+			int dy = y - centreY;
+			if (dx * dx + dy * dy < radius * radius)
+				SetPixel(imageBuffer, width, height, x, y, 255, 255, 0, 255);
 		}
 
-	//task 2!!!
-	setPixel(imageBuffer, 0, 0, 0, 255, 0, 255);
-	
-
 	/// *** Lab Tasks ***
-	// * Task 1: Try adapting the code above to set the lower half of the image to be a green colour. 
-
+	// * Task 1: Try adapting the code above to set the lower half of the image to be a green colour.
 	// * Task 2: Doing the maths above to work out indices is a bit annoying! Write your own setPixel function.
 	//           This should take x and y coordinates as input, and red, green, blue and alpha values.
 	//           Remember to pass in your imageBuffer. Should it be passed in by reference or by value? Should
 	//           the reference be const?
 	//           We will use this setPixel function to build our rasteriser in the upcoming labs.
 	//			 Test your setPixel function by setting pixels in your image to different colours.
-
 	// * Optional Task 3: Use your setPixel function to draw a circle in the centre of the image. Remember a point is
 	//           in a circle if sqrt((x - x_0)^2 + (y - y_0)^2) < radius (here x_0, y_0 are the coordinates at the middle of 
 	//           the circle). 
@@ -74,7 +132,6 @@ int main()
 	//           pixel lies in the circle.
 	//           Try modifying the order you draw each component in. If you draw the circle before setting the lower 
 	//           part of the image to be green, how does this modify the image?
-	
 	// * Optional Task 4: Work out how good the compression ratio of the saved PNG image is. PNG images
 	//           use *lossless* compression, where all the pixel values of the original image are preserved.
 	//           To work out the compression ratio, compare the size of the saved image to the memory

@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <algorithm>
+#include <cstdint>
 
 struct Color {
 	uint8_t r, g, b, a;

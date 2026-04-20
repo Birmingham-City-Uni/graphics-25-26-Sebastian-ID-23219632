@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <vector>
 #include <fstream>
+#include <stdexcept>
 
 /// <summary>
 /// Abstract class representing a light source.

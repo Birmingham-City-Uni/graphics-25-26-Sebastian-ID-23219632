@@ -2,6 +2,9 @@
 #include <Eigen/Dense>
 #include <vector>
 #include <fstream>
+#include <sstream>
+#include <string>
+#include <stdexcept>
 
 struct Mesh {
 	std::vector<Eigen::Vector3f> verts;

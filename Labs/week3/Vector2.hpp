@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ostream>
+#include <stdexcept>
 
 
 // *** Your Code Here! ***
@@ -106,20 +107,14 @@ public:
 		return y_;
 	}
 
-	const float cross(const Vector2& other)
+	float cross(const Vector2& other) const
 	{
-		// YOUR CODE HERE
-		// Implement the cross product, following the formula from the slides.
-		// Note of course the cross product isn't actually defined for 2D vectors!
-		// To implement it here, we're interpreting these vectors as 3D vectors with a z-component of 0
-		// We're only returning a float (which is the z-component of the resulting vector)
-		// If you think about it, the x and y components of this output vector will always be 0.
+		return x_ * other.y() - y_ * other.x();
 	}
 
-	const float dot(const Vector2& other)
+	float dot(const Vector2& other) const
 	{
-		// YOUR CODE HERE
-		// Implement the dot product, following the formula from the slides.
+		return x_ * other.x() + y_ * other.y();
 	}
 
 private:

@@ -1,7 +1,11 @@
 #pragma once
 #include <Eigen/Dense>
 #include <vector>
+#include <array>
 #include <fstream>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 
 struct Mesh {
 	std::vector<Eigen::Vector3f> verts;

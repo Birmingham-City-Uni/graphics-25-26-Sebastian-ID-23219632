@@ -1,5 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
+#include <stdexcept>
 #include <vector>
 #include <fstream>
 

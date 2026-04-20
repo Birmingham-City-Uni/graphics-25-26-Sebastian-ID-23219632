@@ -3,6 +3,10 @@
 #include <math.h>
 
 #include <iostream>
+#include <cstdint>
+#include <memory>
+#include <array>
+#include <algorithm>
 #include <lodepng.h>
 #include "Image.hpp"
 #include "LinAlg.hpp"
@@ -76,13 +80,11 @@ void drawTriangle(std::vector<uint8_t>& image, int width, int height,
 			
 			//========== Subtask 2 ==========
 
-			// *** YOUR CODE HERE ***
 			// Work out the world-space position and normal at this point on the triangle.
 			// You can work this out using t.verts, t.norms and the barycentric coordinates.
 			// HINT: Don't forget to re-normalise your norm afterwards!
-			Eigen::Vector3f worldP = Eigen::Vector3f::Zero();
-			Eigen::Vector3f normP = Eigen::Vector3f::Zero();
-			// *** END YOUR CODE ***
+			Eigen::Vector3f worldP = b0 * t.verts[0] + b1 * t.verts[1] + b2 * t.verts[2];
+			Eigen::Vector3f normP = (b0 * t.norms[0] + b1 * t.norms[1] + b2 * t.norms[2]).normalized();
 
 			// Work out colour at this position.
 			Eigen::Vector3f color = Eigen::Vector3f::Zero();
@@ -90,12 +92,11 @@ void drawTriangle(std::vector<uint8_t>& image, int width, int height,
 			// Iterate over lights, and sum to find colour.
 			for (auto& light : lights) {
 
-				// *** YOUR CODE HERE ***
 				// Work out the contribution from this light source, and add it to the color variable.
 				// Comments and starter code are provided below to walk you through the steps involved.
 
 				// Work out the intensity of this light source, at the point worldP.
-				Eigen::Vector3f lightIntensity = Eigen::Vector3f::Zero();
+				Eigen::Vector3f lightIntensity = light->getIntensityAt(worldP);
 
 				// We only need to do the following if the light isn't an ambient light.
 				if (light->getType() != Light::Type::AMBIENT) {
@@ -105,18 +106,19 @@ void drawTriangle(std::vector<uint8_t>& image, int width, int height,
 					// the light source to the surface.
 					// You want the vector from the surface outward, so *negate* this vector
 					// (i.e. use -direction, rather than direction).
-					float dotProd = 0.0f;
+					float dotProd = normP.dot(-light->getDirection(worldP));
 
 					// We don't want negative light - if your dot product was less than 0, set it to 0.
+					dotProd = std::max(dotProd, 0.0f);
 
 					// Multiply the light intensity by the dot product.
+					lightIntensity *= dotProd;
 				}
 
 				// Now add the intensity times the albedo.
 				// You need to use a coefficient-wise multiply (not matrix multiply, dot product or cross product!)
 				// There's a handy coeffWiseMultiply function I've written for you in LinAlg.hpp for this.
-
-				// *** END YOUR CODE ***
+				color += coeffWiseMultiply(lightIntensity, albedo);
 			}
 
 			Color c;
@@ -204,9 +206,9 @@ int main()
 	// add some of these too!
 
 	// *** YOUR CODE HERE ***
-	//lights.emplace_back(new PointLight(Eigen::Vector3f(1.1f, 1.1f, 1.1f), Eigen::Vector3f(0.f, 1.0f, 0.f)));
 	lights.emplace_back(new DirectionalLight(Eigen::Vector3f(0.4f, 0.4f, 0.4f), Eigen::Vector3f(1.f, 0.f, 0.0f)));
-	//lights.emplace_back(new SpotLight(Eigen::Vector3f(10.0f, 0.0f, 0.0f), Eigen::Vector3f(0.f, 1.f, 0.0f), Eigen::Vector3f(0, -1, 0), M_PI/8));
+	lights.emplace_back(new PointLight(Eigen::Vector3f(0.5f, 0.45f, 0.4f), Eigen::Vector3f(-0.1f, 0.9f, 0.3f)));
+	lights.emplace_back(new SpotLight(Eigen::Vector3f(0.9f, 0.2f, 0.2f), Eigen::Vector3f(0.7f, 0.9f, 0.2f), Eigen::Vector3f(-0.4f, -1.0f, 0.0f), M_PI / 6));
 	// *** END YOUR CODE ***
 
 

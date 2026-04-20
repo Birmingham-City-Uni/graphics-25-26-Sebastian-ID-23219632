@@ -1,6 +1,8 @@
 #pragma once
 
 #include <ostream>
+#include <stdexcept>
+#include <string>
 
 
 // *** Your Code Here! ***
@@ -8,35 +10,39 @@
 //           We'll need to use this to load and draw the triangle mesh from the OBJ file.
 //           Complete the functions indicated, so we can use the Vector3 class to draw our mesh!
 
+std::string inputFilename = "../models/stanford_bunny_simplified.obj";
+
 class Vector3
 {
 public:
 	// This is the default constructor.
 	// Change this to set the x, y and z components of the vector to all be zero.
 	// You can use an initialiser list, or set them in the constructor function's body.
+
 	Vector3()
-		: x_(0.0f), y_(0.0f), z_(0.0f)
 	{
+		x_ = 0.0f;
+		y_ = 0.0f;
+		z_ = 0.0f;
 	}
 
 	// This constructor can be used to set the x, y and z components of a vector when it
 	// is created. Change this function to set the x_, y_ and z_ members to the values
 	// provided.
 	Vector3(float x, float y, float z)
-		: x_(x), y_(y), z_(z)
 	{
+		x_ = x;
+		y_ = y;
+		z_ = z;
 	}
 
 	// Implement this method to add two vectors.
-	//other represents the right side. essentially, it's x_+x_2, y_+y_2, z_+z_2. it's adding two vectors to make a new one.
 	Vector3 operator+(const Vector3& other) const
 	{
 		return Vector3(x_ + other.x_, y_ + other.y_, z_ + other.z_);
 	}
 
-	// Multiply the vector by a scalar. 
-	// since scalars are x*scalar, y*scalar, z*scalar = (xs,ys,zs) where s stands for scalar
-	// it doesn't follow the other.x scheme.
+	// Multiply the vector by a scalar.
 	Vector3 operator*(float scalar) const
 	{
 		return Vector3(x_ * scalar, y_ * scalar, z_ * scalar);
@@ -56,6 +62,8 @@ public:
 		case 0: return x_;
 		case 1: return y_;
 		case 2: return z_;
+		default:
+			throw std::out_of_range("Vector3 index must be 0, 1, or 2");
 		}
 	}
 
@@ -64,11 +72,13 @@ public:
 	// The code inside can be the same as for the non-const version above.
 	float operator[](int i) const
 	{
-		switch (i) 
+		switch (i)
 		{
 		case 0: return x_;
 		case 1: return y_;
 		case 2: return z_;
+		default:
+			throw std::out_of_range("Vector3 index must be 0, 1, or 2");
 		}
 	}
 

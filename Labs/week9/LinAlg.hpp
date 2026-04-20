@@ -1,5 +1,6 @@
 # pragma once
 # include <Eigen/Dense>
+#include <cmath>
 
 // This convenience function converts a 3D vector to a 4D homogeneous vector,
 // setting the w component to 1.

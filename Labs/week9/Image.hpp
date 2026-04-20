@@ -1,5 +1,10 @@
 #pragma once
 #include <vector>
+#include <algorithm>
+#include <cstdint>
+#include <cfloat>
+#include <stdexcept>
+#include <string>
 #include <lodepng.h>
 #include "Light.hpp"
 
