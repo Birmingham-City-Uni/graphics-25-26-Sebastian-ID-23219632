@@ -2,8 +2,6 @@
 #include <lodepng.h>
 #include <fstream>
 #include <sstream>
-#include <cstdint>
-#include <cstring>
 #include "Vector3.hpp"
 
 // The goal for this lab is to draw a triangle mesh loaded from an OBJ file from scratch,

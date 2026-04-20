@@ -69,7 +69,7 @@ public:
 		// This one should be quite easy - remember the intensity of an ambient
 		// light is the same everywhere!
 		// *** YOUR CODE HERE ***
-		return _intensity;
+		return Eigen::Vector3f::Zero();
 		// *** END YOUR CODE ***
 	}
 
@@ -82,7 +82,7 @@ public:
 	{
 		// Ambient lights do not have a direction, so throw an error!
 		// *** YOUR CODE HERE ***
-		throw std::runtime_error("ERROR: Ambient lights have no light direction.");
+		return Eigen::Vector3f::Zero();
 		// *** END YOUR CODE ***
 	}
 
@@ -90,7 +90,7 @@ public:
 	{
 		// Ambient lights do not have a location, so throw an error!
 		// *** YOUR CODE HERE ***
-		throw std::runtime_error("ERROR: Ambient lights have no location.");
+		return Eigen::Vector3f::Zero();
 		// *** END YOUR CODE ***
 	}
 };
@@ -113,7 +113,7 @@ public:
 		// This one should also be quite easy - the intensity of an directional
 		// light is also the same everywhere!
 		// *** YOUR CODE HERE ***
-		return _intensity;
+		return Eigen::Vector3f::Zero();
 		// *** END YOUR CODE ***
 	}
 
@@ -126,7 +126,7 @@ public:
 	{
 		// Directional lights *do* have a direction, so return it!
 		// *** YOUR CODE HERE ***
-		return _direction;
+		return Eigen::Vector3f::Zero();
 		// *** END YOUR CODE ***
 	}
 
@@ -134,10 +134,12 @@ public:
 	{
 		// Directional lights do not have a location, so throw an error!
 		// *** YOUR CODE HERE ***
-		throw std::runtime_error("ERROR: Directional lights have no location.");
+		return Eigen::Vector3f::Zero();
 		// *** END YOUR CODE ***
 	}
 };	
+
+// =========== Subtask 4 ============
 
 /// <summary>
 /// Point lights have a location in the world, and their intensity falls off with the 
@@ -161,8 +163,7 @@ public:
 		// Then multiply the intensity by 1/distance^2, following the inverse
 		// square law.
 		// *** YOUR CODE HERE ***
-		float distance = (_location - surfaceLocation).norm();
-		return _intensity / (distance * distance);
+		return Eigen::Vector3f::Zero();
 		// *** END YOUR CODE ***
 	}
 
@@ -178,17 +179,19 @@ public:
 		// the surface location.
 		// Don't forget to normalize it!
 		// *** YOUR CODE HERE ***
-		return (surfaceLocation - _location).normalized();
+		return Eigen::Vector3f::Zero();
 		// *** END YOUR CODE ***
 	}
 
 	virtual Eigen::Vector3f getLightLocation() override
 	{
 		// *** YOUR CODE HERE ***
-		return _location;
+		return Eigen::Vector3f::Zero();
 		// *** END YOUR CODE ***
 	}
 };	
+
+// =========== Optional Extra Subtask 5 ============
 
 /// <summary>
 /// Spot lights have a location in the world, and their intensity falls off with the 
@@ -218,13 +221,7 @@ public:
 		// you're outside the spotlight cone and can just return 0.
 		// Otherwise, behave just like a point light!
 		// *** YOUR CODE HERE ***
-		auto surfaceDir = (surfaceLocation - _location).normalized();
-		if (surfaceDir.dot(_direction) < _cosAngle) {
-			return Eigen::Vector3f::Zero();
-		}
-
-		float distance = (_location - surfaceLocation).norm();
-		return _intensity / (distance * distance);
+		return Eigen::Vector3f::Zero();
 		// *** END YOUR CODE ***
 	}
 
@@ -237,14 +234,14 @@ public:
 	{
 		// This will be just like your point light code.
 		// *** YOUR CODE HERE ***
-		return (surfaceLocation - _location).normalized();
+		return Eigen::Vector3f::Zero();
 		// *** END YOUR CODE ***
 	}
 
 	virtual Eigen::Vector3f getLightLocation() override
 	{
 		// *** YOUR CODE HERE ***
-		return _location;
+		return Eigen::Vector3f::Zero();
 		// *** END YOUR CODE ***
 	}
 };	

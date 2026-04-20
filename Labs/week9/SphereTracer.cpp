@@ -86,22 +86,8 @@ bool raySphereIntersection(const Ray& ray, const Sphere& sphere, Vector3f& inter
 	//   a. If such a t exists, set the value of "intersection" and "t" and return true.
 	//   b. If no such t exists, return false.
 
-	Vector3f oc = ray.origin - sphere.location;
-	float A = ray.direction.dot(ray.direction);
-	float B = 2.0f * ray.direction.dot(oc);
-	float C = oc.dot(oc) - sphere.radius * sphere.radius;
-	float discriminant = B * B - 4.0f * A * C;
-	if (discriminant < 0.0f) return false;
-	float sqrtDisc = sqrtf(discriminant);
-	float t0 = (-B - sqrtDisc) / (2.0f * A);
-	float t1 = (-B + sqrtDisc) / (2.0f * A);
-	float hitT = FLT_MAX;
-	if (t0 > minT) hitT = t0;
-	if (t1 > minT && t1 < hitT) hitT = t1;
-	if (hitT == FLT_MAX) return false;
-	t = hitT;
-	intersection = ray.origin + t * ray.direction;
-	return true;
+	// Remove this existing code, that just always returns false.
+	return false;
 	// *** END YOUR CODE ***
 } 
 
@@ -112,7 +98,8 @@ Vector3f getSphereNormal(const Sphere& sphere, const Vector3f& location) {
 	// This should only need one line of code!
 	// See the slides for more detail.
 	// 
-	return (location - sphere.location).normalized();
+	// Remove this existing code that just returns 0.
+	return Vector3f::Zero();
 	// *** END YOUR CODE ***
 }
 
@@ -129,12 +116,9 @@ bool refract(const Vector3f& incident, const Vector3f& norm, float eta, Vector3f
 	// 2. If k < 0, return false (TIR occurs).
 	// 3. Otherwise, find the refracted ray and return true.
 
-	float cosi = -norm.dot(incident);
-	float k = 1.0f - eta * eta * (1.0f - cosi * cosi);
-	if (k < 0.0f) return false;
-	refracted = eta * incident + (eta * cosi - sqrtf(k)) * norm;
-	refracted.normalize();
-	return true;
+	// This existing code just always returns false.
+	// Remove it when you write your own code!
+	return false;
 	// *** END YOUR CODE
 }
 
@@ -236,11 +220,9 @@ Vector3f traceRay(const Ray& ray, const std::vector<Sphere>& spheres, const std:
 		// REMINDER: don't forget to increase the value of bounce by 1 when you call traceRay
 		// again recursively! This will make sure you don't exceed the maxBounces bounce count.
 
-		Vector3f normal = getSphereNormal(*hitSphere, hitIntersection);
-		Vector3f reflectedDir = reflect(ray.direction, normal).normalized();
-		Ray reflectedRay{ hitIntersection, reflectedDir };
-		Vector3f reflectedColor = traceRay(reflectedRay, spheres, lights, bounce + 1);
-		return coeffWiseMultiply(reflectedColor, hitSphere->colour);
+		// This existing code throws an error as mirror spheres haven't been implemented yet.
+		// Remove it when you've implemented mirrors!
+		throw std::runtime_error("Mirror material not implemented!");
 		//*** END YOUR CODE
 	}
 	else if (hitSphere->material == Material::REFRACTIVE) {
@@ -266,17 +248,23 @@ Vector3f traceRay(const Ray& ray, const std::vector<Sphere>& spheres, const std:
 
 		// Task 6: Add refraction
 		// *** YOUR CODE HERE ***
-			Vector3f refractedDir;
-			if (refract(ray.direction, normal, eta, refractedDir)) {
-				Ray refractedRay{ hitIntersection, refractedDir.normalized() };
-				Vector3f refractedColor = traceRay(refractedRay, spheres, lights, bounce + 1);
-				return coeffWiseMultiply(refractedColor, hitSphere->colour);
-			}
-			else {
-				Vector3f reflectedDir = reflect(ray.direction, normal).normalized();
-				Ray reflectedRay{ hitIntersection, reflectedDir };
-				return traceRay(reflectedRay, spheres, lights, bounce + 1);
-			}
+
+		// Remove this line when you've implemented refraction!
+		throw std::runtime_error("Mirror material not implemented!");
+
+		// Handle refraction, and total internal reflection!
+		// Steps:
+		// 1. Try to refract the incoming ray in the normal, using the value of eta calculated above.
+		// 2. If refract returns true:
+		//		a. Construct a refracted ray
+		//      b. Call traceRay to find the colour. Don't forget to use bounce+1!
+		//      c. Optional: Coefft-wise multiply the result with this hit sphere's colour (this will allow you to 
+		//         make coloured glass).
+		// 3. If refract returns false:
+		//      a. Total Internal Reflection has occured!
+		//      b. Find the reflected direction, and make a reflected ray.
+		//      c. Trace the reflected ray. Again, make sure to use bounce+1!
+
 		// *** END YOUR CODE ***
 	}
 }

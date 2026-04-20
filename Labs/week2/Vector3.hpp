@@ -1,7 +1,6 @@
 #pragma once
 
 #include <ostream>
-#include <stdexcept>
 
 
 // *** Your Code Here! ***
@@ -57,7 +56,6 @@ public:
 		case 0: return x_;
 		case 1: return y_;
 		case 2: return z_;
-		default: throw std::out_of_range("Vector3 index out of range");
 		}
 	}
 
@@ -71,7 +69,6 @@ public:
 		case 0: return x_;
 		case 1: return y_;
 		case 2: return z_;
-		default: throw std::out_of_range("Vector3 index out of range");
 		}
 	}
 
