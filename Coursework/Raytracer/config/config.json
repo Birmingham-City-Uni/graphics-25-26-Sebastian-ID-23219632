@@ -1,18 +1,27 @@
 {
-    "pixWidth": 1920,
-    "pixHeight": 1080,
+    "pixWidth": 1280,
+    "pixHeight": 720,
 
-    "maxBounces": 5,
+    "maxBounces": 1,
+    "bvhDepth": 18,
+    "backfaceCulling": false,
+    "shadowTest": true,
 
-    "clearColor": [0,0,0,255],
+    "clearColor": [8, 10, 14, 255],
 
-    "cameraPos": [0.0, 0.0, -5],
-    "cameraForward": [0.0, 0.0, 1.0],
-    "cameraUp": [0.0, 1.0, 0.0],
+    "modelPath": "../models/ARC_RAIDERS_BAKED.obj",
 
-    "cameraFov": 0.785,
+    "cameraPos": [0.0, 1.25, 17.0],
+"cameraForward": [0.0, 0.0, -1.0],
+"cameraUp": [0.0, 1.0, 0.0],
+"cameraFov": 0.785398,
+"nearPlane": 0.01,
+"farPlane": 1000.0,
+
+    "ambientLight": [0.50, 0.50, 0.50],
+    "directionalLightDir": [-0.3, -0.7, 0.4],
+    "directionalLightIntensity": [0.55, 0.55, 0.55],
 
     "shuffleScanlines": true,
-
-    "outputFilename": "output.png"
+    "outputFilename": "raytraced.png"
 }

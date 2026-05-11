@@ -148,7 +148,7 @@ public:
 	{
 		for (int i = 0; i < 3; ++i) {
 			aabb_.min[i] = std::numeric_limits<float>::max();
-			aabb_.max[i] = std::numeric_limits<float>::min();
+			aabb_.max[i] = std::numeric_limits<float>::lowest();
 		}
 		for (int f = 0; f < faceIndices.size(); ++f) {
 			for (int v = 0; v < 3; ++v) {
